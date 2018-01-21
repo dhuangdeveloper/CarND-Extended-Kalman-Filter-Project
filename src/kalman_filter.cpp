@@ -22,9 +22,12 @@ void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
 
 void KalmanFilter::Predict() {
   /**
-  TODO:
+  Done!
     * predict the state
   */
+  // Predict the state
+  x_ = F_ * x_;
+  P_ = F_ * P_ * F_.transpose() + Q_;
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
@@ -32,6 +35,14 @@ void KalmanFilter::Update(const VectorXd &z) {
   TODO:
     * update the state by using Kalman Filter equations
   */
+  // update the state by using Kalman Filter equations
+  VectorXd y = z - H_ * x_;
+  MatrixXd S = H_ * P_ * H_.transpose() + R_;
+  MatrixXd K = P_ * H_.transpose() * S.inverse();
+  
+  x_ = x_ + K * y;
+  P_ = P_ - K * H_ * P_;
+
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
@@ -39,4 +50,26 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
+  // update the state by using Extended Kalman Filter equations
+  Tools tool; 
+  MatrixXd Hj= tool.CalculateJacobina(x_);     
+  //recover state parameters
+  float px = x_(0);
+  float py = x_(1);
+  float vx = x_(2);
+  float vy = x_(3);
+    
+  float pxy2 = px * px + py * py;
+  float pxy = sqrt(pxy2);    
+  
+  VectorXd Xd hx;
+  hx << pxy, atan2(py, px), (px * vx + py * vy / pxy);
+  
+  
+  VectorXd y = z - Hx;
+  MatrixXd S = Hj * P_ * Hj.transpose() + R_;
+  MatrixXd K = P_ * Hj.transpose() * S.inverse();
+  
+  x_ = x_ + K * y;
+  P_ = P_ - K * Hj * P_;
 }
