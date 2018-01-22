@@ -1,8 +1,9 @@
 #include "kalman_filter.h"
-
+#include "tools.h"
+#include <iostream>
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
-
+using namespace std;
 // Please note that the Eigen library does not initialize 
 // VectorXd or MatrixXd objects with zeros upon creation.
 
@@ -31,16 +32,13 @@ void KalmanFilter::Predict() {
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Kalman Filter equations
-  */
-  // update the state by using Kalman Filter equations
+  // update the state by using Kalman Filter equations  
+    
   VectorXd y = z - H_ * x_;
-  MatrixXd S = H_ * P_ * H_.transpose() + R_;
+  MatrixXd S = H_ * P_ * H_.transpose() + R_;  
   MatrixXd K = P_ * H_.transpose() * S.inverse();
-  
-  x_ = x_ + K * y;
+    
+  x_ = x_ + K * y;  
   P_ = P_ - K * H_ * P_;
 
 }
@@ -52,7 +50,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   */
   // update the state by using Extended Kalman Filter equations
   Tools tool; 
-  MatrixXd Hj= tool.CalculateJacobina(x_);     
+  MatrixXd Hj= tool.CalculateJacobian(x_);     
   //recover state parameters
   float px = x_(0);
   float py = x_(1);
@@ -62,11 +60,11 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float pxy2 = px * px + py * py;
   float pxy = sqrt(pxy2);    
   
-  VectorXd Xd hx;
+  VectorXd hx(3);
   hx << pxy, atan2(py, px), (px * vx + py * vy / pxy);
   
   
-  VectorXd y = z - Hx;
+  VectorXd y = z - hx;
   MatrixXd S = Hj * P_ * Hj.transpose() + R_;
   MatrixXd K = P_ * Hj.transpose() * S.inverse();
   
