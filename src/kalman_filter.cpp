@@ -51,8 +51,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   // update the state by using Extended Kalman Filter equations
   Tools tool; 
   MatrixXd Hj= tool.CalculateJacobian(x_);     
-  cout << "z" << z << endl;
-  //cout << "Hj" << Hj << endl;
   //recover state parameters
   float px = x_(0);
   float py = x_(1);
@@ -63,11 +61,9 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float pxy = sqrt(pxy2);    
   
   VectorXd hx(3);
-  hx << pxy, atan2(py, px), (px * vx + py * vy) / pxy;
-  cout << hx << endl;
+  hx << pxy, atan2(py, px), (px * vx + py * vy) / pxy;  
   
-  VectorXd y = z - hx;
-  cout << "y: " << y << endl;
+  VectorXd y = z - hx;  
   const float pi = 3.14159265;
   while (y(1)> pi){
     y(1) = y(1) - 2 * pi;
