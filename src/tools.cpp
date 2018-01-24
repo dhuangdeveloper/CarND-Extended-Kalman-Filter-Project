@@ -12,6 +12,7 @@ using std::vector;
 VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
                               const vector<VectorXd> &ground_truth) {
   // Calculate the RMSE here
+  // Code is from the one I submitted in quiz, with some portion coming from prefilled-code in the quiz
   VectorXd rmse(4);
   rmse << 0,0,0,0;
   // check the validity of the following inputs:
@@ -22,6 +23,7 @@ VectorXd Tools::CalculateRMSE(const vector<VectorXd> &estimations,
     return rmse;
   }
   //accumulate squared residuals
+  
   for(int i=0; i < estimations.size(); ++i){
 	  // ... your code here
 	  VectorXd residual(4);
