@@ -4,7 +4,6 @@
 #include <math.h>
 #include "FusionEKF.h"
 #include "tools.h"
-
 using namespace std;
 
 // for convenience
@@ -125,7 +124,6 @@ int main()
     	  estimations.push_back(estimate);
 
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
-
           json msgJson;
           msgJson["estimate_x"] = p_x;
           msgJson["estimate_y"] = p_y;
